@@ -2,6 +2,10 @@
 
 Aplicación web hecha con JavaScript que permite medir el tiempo y registrar vueltas a la vez que el contador vuelve a 0.
 
+#Link
+
+https://fdva92.github.io/cronometro-contador/
+
 # Funcionalidades
 
 * Iniciar cronómetro
