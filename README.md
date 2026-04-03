@@ -1,34 +1,100 @@
-# Cronómetro con Vueltas
+# Cronómetro Contador - PWA para Android
 
-Aplicación web hecha con JavaScript que permite medir el tiempo y registrar vueltas a la vez que el contador vuelve a 0.
+Aplicación web hecha con JavaScript que permite medir el tiempo y registrar vueltas a la vez que el contador vuelve a 0. Ahora optimizada como Progressive Web App (PWA) para instalación en dispositivos Android.
 
-#Link
+## 🚀 Características
+
+- ⏱️ Cronómetro preciso con centésimas
+- 🎨 11 colores de fondo que cambian aleatoriamente
+- ☁️ Cielo animado con nubes flotantes
+- 🐦 Aves volando
+- 🌊 Océano con olas y peces nadando
+- 📱 Optimizado para móviles
+- 🔄 Funciona offline (PWA)
+- 📱 Instalable en Android
+
+## 📱 Instalación en Android
+
+### Opción 1: Desde el navegador (PWA)
+1. Abre la aplicación en Chrome o Edge para Android
+2. Toca el menú (tres puntos) ⋮
+3. Selecciona "Agregar a pantalla de inicio" o "Instalar aplicación"
+4. Confirma la instalación
+
+### Opción 2: Generar APK nativo
+Para generar un APK nativo, puedes usar herramientas como:
+- **PWABuilder**: https://www.pwabuilder.com/
+- **Capacitor**: `npx cap add android && npx cap build android`
+- **Bubblewrap**: https://github.com/GoogleChromeLabs/bubblewrap
+
+## 🔗 Demo en línea
 
 https://fdva92.github.io/cronometro-contador/
 
-# Funcionalidades
+## 🛠️ Desarrollo local
 
-* Iniciar cronómetro
-* Registrar vueltas
-* Contador automático de vueltas
-* Reinicio de tiempo en cada vuelta
-* Detener cronómetro
+### Requisitos
+- Navegador web moderno con soporte PWA
 
-# Tecnologías
+### Ejecutar localmente
+1. Clona o descarga los archivos
+2. Abre `index.html` en tu navegador
+3. Para funcionalidad completa de PWA, sirve los archivos desde un servidor web
 
-* HTML
-* JavaScript
+### Servidor local simple
+```bash
+# Usando Python
+python -m http.server 8000
 
-# Demo
+# Usando Node.js
+npx live-server
+```
 
-<img width="754" height="633" alt="image" src="https://github.com/user-attachments/assets/feb4b193-f026-496e-927f-2375d945d66d" />
+## 📁 Estructura del proyecto
 
+```
+cronometro_contador/
+├── index.html          # HTML principal con PWA
+├── styles.css          # Estilos CSS
+├── 01.js              # Lógica JavaScript
+├── manifest.json      # Configuración PWA
+├── sw.js              # Service Worker
+├── cronometro.png     # Imagen del cronómetro
+├── icon-192.png       # Icono 192x192
+├── icon-512.png       # Icono 512x512
+└── README.md          # Este archivo
+```
 
-# Cómo usar
+## 🎨 Funcionalidades
 
-1. Descargar el proyecto
-2. Abrir `index.html` en el navegador
+* ✅ Iniciar cronómetro
+* ✅ Registrar vueltas
+* ✅ Contador automático de vueltas
+* ✅ Reinicio de tiempo en cada vuelta
+* ✅ Detener cronómetro
+* ✅ 11 colores dinámicos aleatorios
+* ✅ Animaciones de cielo y océano
+* ✅ Modo offline (PWA)
+
+## 📱 Compatibilidad
+
+- ✅ Chrome para Android
+- ✅ Edge para Android
+- ✅ Firefox para Android
+- ✅ Navegadores modernos con soporte PWA
+
+## 🛠️ Tecnologías
+
+* HTML5
+* CSS3 (Animaciones, Gradientes, Flexbox)
+* JavaScript (ES6+)
+* Progressive Web App (PWA)
+* Service Worker para funcionamiento offline
 
 ## 💡 Autor
 
 Freddy Vargas
+
+## 📄 Licencia
+
+Este proyecto es de código abierto y gratuito para uso personal y educativo.
