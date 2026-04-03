@@ -15,11 +15,13 @@ Aplicación web hecha con JavaScript que permite medir el tiempo y registrar vue
 
 ## 📱 Instalación en Android
 
-### Opción 1: Desde el navegador (PWA)
-1. Abre la aplicación en Chrome o Edge para Android
-2. Toca el menú (tres puntos) ⋮
-3. Selecciona "Agregar a pantalla de inicio" o "Instalar aplicación"
-4. Confirma la instalación
+### Opción 1: Desde el navegador (PWA) - RECOMENDADO
+1. **Ve directamente a la app desplegada:** https://fdva92.github.io/cronometro-contador/
+2. **Abre en Chrome o Edge para Android**
+3. **Toca el menú** (tres puntos) ⋮
+4. **Selecciona "Agregar a pantalla de inicio"** o **"Instalar aplicación"**
+5. **Confirma la instalación**
+6. **¡Listo!** La app aparecerá en tu pantalla de inicio
 
 ### Opción 2: Generar APK nativo
 Para generar un APK nativo, puedes usar herramientas como:

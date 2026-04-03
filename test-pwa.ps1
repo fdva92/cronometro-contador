@@ -45,4 +45,4 @@ Write-Host "1. Abre http://localhost:8000 en tu navegador" -ForegroundColor Whit
 Write-Host "2. Para instalar como PWA en Android:" -ForegroundColor White
 Write-Host "   - Abre en Chrome/Edge para Android" -ForegroundColor White
 Write-Host "   - Toca el menú (⋮) > 'Agregar a pantalla de inicio'" -ForegroundColor White
-Write-Host "3. ¡Disfruta tu cronómetro!" -ForegroundColor Green
+Write-Host "3. Disfruta tu cronometro!" -ForegroundColor Green

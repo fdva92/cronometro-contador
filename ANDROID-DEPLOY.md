@@ -3,11 +3,12 @@
 ## 🚀 Opción 1: PWA (Recomendado - Más fácil)
 
 ### Instalación desde navegador:
-1. **Abre la app en Chrome/Edge para Android**
-2. **Toca el menú** (tres puntos ⋮ en la esquina superior derecha)
-3. **Selecciona "Agregar a pantalla de inicio"** o **"Instalar aplicación"**
-4. **Confirma la instalación**
-5. **¡Listo!** La app aparecerá en tu pantalla de inicio como cualquier otra app
+1. **Ve a la URL desplegada:** https://fdva92.github.io/cronometro-contador/
+2. **Abre en Chrome/Edge para Android**
+3. **Toca el menú** (tres puntos ⋮ en la esquina superior derecha)
+4. **Selecciona "Agregar a pantalla de inicio"** o **"Instalar aplicación"**
+5. **Confirma la instalación**
+6. **¡Listo!** La app aparecerá en tu pantalla de inicio como cualquier otra app
 
 ### Requisitos:
 - Android 5.0 o superior
