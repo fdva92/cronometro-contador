@@ -164,55 +164,7 @@
       }
     }
 
-    /* Aves */
-    .birds {
-      position: absolute;
-      top: 30px;
-      width: 100%;
-      height: 60px;
-      z-index: 2;
-    }
 
-    .bird {
-      position: absolute;
-      font-size: 24px;
-      animation: fly 15s infinite linear;
-    }
-
-    .bird1 {
-      animation: fly 15s infinite linear;
-      top: 10px;
-    }
-
-    .bird2 {
-      animation: fly 18s infinite linear 3s backwards;
-      top: 35px;
-    }
-
-    .bird3 {
-      animation: fly 20s infinite linear 6s backwards;
-      top: 50px;
-    }
-
-    @keyframes fly {
-      0% {
-        left: -50px;
-        opacity: 0.4;
-      }
-      10% {
-        opacity: 0.7;
-      }
-      50% {
-        opacity: 1;
-      }
-      90% {
-        opacity: 0.7;
-      }
-      100% {
-        left: 100%;
-        opacity: 0.4;
-      }
-    }
 
     /* Mar/Océano */
     .ocean-background {
@@ -258,46 +210,7 @@
       }
     }
 
-    /* Peces */
-    .fish {
-      position: absolute;
-      font-size: 20px;
-      animation: swim 15s infinite linear;
-      z-index: 3;
-    }
 
-    .fish1 {
-      bottom: 40px;
-      animation: swim 15s infinite linear;
-    }
-
-    .fish2 {
-      bottom: 80px;
-      animation: swim 20s infinite linear 4s backwards;
-    }
-
-    .fish3 {
-      bottom: 60px;
-      animation: swim 18s infinite linear 8s backwards;
-    }
-
-    @keyframes swim {
-      0% {
-        left: -50px;
-        transform: scaleX(1);
-      }
-      25% {
-        transform: scaleX(-1);
-      }
-      50% {
-        transform: scaleX(1);
-      }
-      75% {
-        transform: scaleX(-1);
-      }
-      100% {
-        left: 100%;
-        transform: scaleX(1);
       }
     }
 
@@ -495,12 +408,6 @@
         <div class="cloud cloud2"></div>
         <div class="cloud cloud3"></div>
       </div>
-      <!-- Aves volando -->
-      <div class="birds">
-        <div class="bird bird1">🐦</div>
-        <div class="bird bird2">🐦</div>
-        <div class="bird bird3">🐦</div>
-      </div>
     </div>
 
     <!-- Contenido principal -->
@@ -524,10 +431,6 @@
       <div class="wave wave1"></div>
       <div class="wave wave2"></div>
       <div class="wave wave3"></div>
-      <!-- Peces nadando -->
-      <div class="fish fish1">🐠</div>
-      <div class="fish fish2">🐟</div>
-      <div class="fish fish3">🐡</div>
     </div>
   </div>
 
