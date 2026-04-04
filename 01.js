@@ -1,19 +1,19 @@
-let tiempoMs = 0; //iniciamos el tiempo en 0 milisegundos
+let tiempoMs = 0; // iniciamos el tiempo en 0 milisegundos
 let intervalo = null; // null indica que el motor está apagado
 let contador = 0; // Este será nuestro contador de vueltas
-const colores = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6', 'color-7', 'color-8', 'color-9', 'color-10', 'color-11']; // Array con los 11 colores disponibles
+const colores = ['color-1', 'color-2', 'color-3', 'color-4', 'color-5', 'color-6', 'color-7', 'color-8', 'color-9', 'color-10', 'color-11'];
 let colorActual = 'color-1'; // Color actual del fondo
-let ultimaActualizacion = Date.now(); // Para calcular tiempo en background
+let acumuladoMs = 0; // Tiempo acumulado antes del último inicio
+let ultimoInicio = null; // Marca de tiempo del último inicio/reanudación
 let cronometroActivo = false; // Estado del cronómetro
-let backgroundWorker = null; // Worker para background
 
 // Función para guardar estado en localStorage
 function guardarEstado() {
   const estado = {
-    tiempoMs,
+    acumuladoMs,
+    ultimoInicio,
     contador,
     colorActual,
-    ultimaActualizacion: Date.now(),
     cronometroActivo
   };
   localStorage.setItem('cronometroEstado', JSON.stringify(estado));
@@ -24,22 +24,34 @@ function cargarEstado() {
   const estadoGuardado = localStorage.getItem('cronometroEstado');
   if (estadoGuardado) {
     const estado = JSON.parse(estadoGuardado);
-    tiempoMs = estado.tiempoMs || 0;
+    acumuladoMs = estado.acumuladoMs || 0;
     contador = estado.contador || 0;
     colorActual = estado.colorActual || 'color-1';
-    ultimaActualizacion = estado.ultimaActualizacion || Date.now();
+    ultimoInicio = estado.ultimoInicio || null;
     cronometroActivo = estado.cronometroActivo || false;
 
-    // Si el cronómetro estaba activo, calcular tiempo transcurrido
-    if (cronometroActivo) {
-      const tiempoTranscurrido = Date.now() - ultimaActualizacion;
-      tiempoMs += tiempoTranscurrido;
-      ultimaActualizacion = Date.now();
+    if (cronometroActivo && ultimoInicio) {
+      const tiempoTranscurrido = Date.now() - ultimoInicio;
+      tiempoMs = acumuladoMs + tiempoTranscurrido;
+      ultimoInicio = Date.now();
+      iniciarIntervalo();
+    } else {
+      tiempoMs = acumuladoMs;
     }
 
     actualizarDisplay();
     aplicarColor();
   }
+}
+
+function iniciarIntervalo() {
+  if (intervalo) return;
+
+  intervalo = setInterval(() => {
+    if (!cronometroActivo || !ultimoInicio) return;
+    tiempoMs = acumuladoMs + (Date.now() - ultimoInicio);
+    actualizarDisplay();
+  }, 100);
 }
 
 // Función para aplicar el color actual
@@ -51,13 +63,11 @@ function aplicarColor() {
 // Función para manejar visibilidad de página
 function manejarVisibilidad() {
   if (document.hidden) {
-    // Página oculta - guardar estado y continuar en background si es posible
     guardarEstado();
-    console.log('Página oculta - cronómetro continúa en background');
+    console.log('Página oculta - estado guardado');
   } else {
-    // Página visible - cargar estado y actualizar display
     cargarEstado();
-    console.log('Página visible - estado actualizado');
+    console.log('Página visible - estado cargado');
   }
 }
 
@@ -102,18 +112,15 @@ function iniciar() {
   if (intervalo) return;
 
   cronometroActivo = true;
-  ultimaActualizacion = Date.now();
+  ultimoInicio = Date.now();
+  acumuladoMs = tiempoMs;
 
   // Si es la primera vez, aplicamos un color inicial
   if (contador === 0) {
     aplicarColor();
   }
 
-  intervalo = setInterval(() => {
-    tiempoMs += 10;
-    actualizarDisplay();
-  }, 10);
-
+  iniciarIntervalo();
   guardarEstado();
 
   // Notificar al service worker
@@ -128,22 +135,20 @@ function iniciar() {
 }
 
 function registrarVuelta() {
-  // Si el motor no está encendido, no registramos nada
-  if (!intervalo) return;
+  if (!cronometroActivo) return;
 
-  // 1. Aumentamos el contador en 1 cada vez que entramos aquí
   contador++;
+
+  const ahora = Date.now();
+  tiempoMs = acumuladoMs + (ahora - ultimoInicio);
 
   let lista = document.getElementById("lista");
   let item = document.createElement("li");
 
-  // 2. Usamos el contador para poner el número de vuelta con minutos, segundos y milisegundos
   const info = formatTime(tiempoMs);
   item.textContent = `Vuelta ${contador}: ${info.texto}`;
-
   lista.appendChild(item);
 
-  // 3. Cambiamos el color de fondo a uno aleatorio
   let nuevoColor;
   do {
     nuevoColor = colores[Math.floor(Math.random() * colores.length)];
@@ -153,13 +158,12 @@ function registrarVuelta() {
   document.body.classList.add(nuevoColor);
   colorActual = nuevoColor;
 
-  // 4. Reiniciamos el tiempo a 0 para que la siguiente vuelta empiece de cero
+  acumuladoMs = 0;
+  ultimoInicio = Date.now();
   tiempoMs = 0;
-  ultimaActualizacion = Date.now();
   actualizarDisplay();
   guardarEstado();
 
-  // Notificar al service worker sobre la vuelta
   if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
     navigator.serviceWorker.controller.postMessage({
       type: 'CRONOMETRO_LAP',
@@ -170,23 +174,24 @@ function registrarVuelta() {
 }
 
 function detener() {
-  clearInterval(intervalo);
-  intervalo = null;
-  cronometroActivo = false;
+  if (intervalo) {
+    clearInterval(intervalo);
+    intervalo = null;
+  }
 
-  // 4. Reinicio total al detener
+  cronometroActivo = false;
+  acumuladoMs = 0;
+  ultimoInicio = null;
   tiempoMs = 0;
   contador = 0;
   colorActual = 'color-1';
   actualizarDisplay();
   document.getElementById("lista").innerHTML = "";
 
-  // Removemos todas las clases de color
   colores.forEach(color => document.body.classList.remove(color));
 
   guardarEstado();
 
-  // Notificar al service worker
   if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
     navigator.serviceWorker.controller.postMessage({
       type: 'CRONOMETRO_STOP'
@@ -211,35 +216,28 @@ async function solicitarPermisosNotificacion() {
 async function inicializarCronometro() {
   console.log('Inicializando cronómetro...');
 
-  // Solicitar permisos de notificación
-  const notificacionesPermitidas = await solicitarPermisosNotificacion();
-
-  // Cargar estado guardado
   cargarEstado();
 
-  // Registrar service worker si está disponible
+  document.addEventListener('visibilitychange', manejarVisibilidad);
+  window.addEventListener('beforeunload', guardarEstado);
+  setInterval(guardarEstado, 1000);
+
   if ('serviceWorker' in navigator) {
-    try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
-      console.log('Service Worker registrado:', registration);
-
-      // Esperar a que esté listo
-      await navigator.serviceWorker.ready;
-
-      // Sincronizar estado con el service worker
-      if (cronometroActivo) {
-        navigator.serviceWorker.controller.postMessage({
-          type: 'CRONOMETRO_START',
-          tiempoMs: tiempoMs,
-          contadorVueltas: contador,
-          colorActual: colorActual
-        });
-      }
-
-      console.log('Cronómetro inicializado correctamente');
-    } catch (error) {
-      console.error('Error registrando Service Worker:', error);
-    }
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('Service Worker registrado:', registration);
+        if (cronometroActivo && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: 'CRONOMETRO_START',
+            tiempoMs: tiempoMs,
+            contadorVueltas: contador,
+            colorActual: colorActual
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error registrando Service Worker:', error);
+      });
   }
 }
 
