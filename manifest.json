@@ -1,13 +1,14 @@
 {
   "name": "Cronómetro Contador",
   "short_name": "Cronómetro",
-  "description": "Cronómetro contador con vueltas y colores dinámicos",
+  "description": "Cronómetro contador con vueltas, colores dinámicos y notificaciones persistentes",
   "start_url": "https://fdva92.github.io/cronometro-contador/",
   "display": "standalone",
   "background_color": "#667eea",
   "theme_color": "#667eea",
   "orientation": "portrait",
   "scope": "https://fdva92.github.io/cronometro-contador/",
+  "permissions": ["notifications"],
   "icons": [
     {
       "src": "https://fdva92.github.io/cronometro-contador/icon-192.png",

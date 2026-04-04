@@ -120,7 +120,9 @@ function iniciar() {
   if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
     navigator.serviceWorker.controller.postMessage({
       type: 'CRONOMETRO_START',
-      tiempoMs: tiempoMs
+      tiempoMs: tiempoMs,
+      contadorVueltas: contador,
+      colorActual: colorActual
     });
   }
 }
@@ -156,6 +158,15 @@ function registrarVuelta() {
   ultimaActualizacion = Date.now();
   actualizarDisplay();
   guardarEstado();
+
+  // Notificar al service worker sobre la vuelta
+  if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+    navigator.serviceWorker.controller.postMessage({
+      type: 'CRONOMETRO_LAP',
+      contadorVueltas: contador,
+      colorActual: colorActual
+    });
+  }
 }
 
 function detener() {
@@ -183,15 +194,71 @@ function detener() {
   }
 }
 
-// Inicializar cuando se carga la página
-document.addEventListener('DOMContentLoaded', inicializarCronometro);
+// Función para solicitar permisos de notificación
+async function solicitarPermisosNotificacion() {
+  if ('Notification' in window) {
+    if (Notification.permission === 'default') {
+      const permission = await Notification.requestPermission();
+      console.log('Permiso de notificación:', permission);
+      return permission === 'granted';
+    }
+    return Notification.permission === 'granted';
+  }
+  return false;
+}
+
+// Función para inicializar el cronómetro
+async function inicializarCronometro() {
+  console.log('Inicializando cronómetro...');
+
+  // Solicitar permisos de notificación
+  const notificacionesPermitidas = await solicitarPermisosNotificacion();
+
+  // Cargar estado guardado
+  cargarEstado();
+
+  // Registrar service worker si está disponible
+  if ('serviceWorker' in navigator) {
+    try {
+      const registration = await navigator.serviceWorker.register('/sw.js');
+      console.log('Service Worker registrado:', registration);
+
+      // Esperar a que esté listo
+      await navigator.serviceWorker.ready;
+
+      // Sincronizar estado con el service worker
+      if (cronometroActivo) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'CRONOMETRO_START',
+          tiempoMs: tiempoMs,
+          contadorVueltas: contador,
+          colorActual: colorActual
+        });
+      }
+
+      console.log('Cronómetro inicializado correctamente');
+    } catch (error) {
+      console.error('Error registrando Service Worker:', error);
+    }
+  }
+}
 
 // Manejar mensajes del service worker
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'CRONOMETRO_UPDATE') {
-      tiempoMs = event.data.tiempoMs;
-      actualizarDisplay();
+    if (event.data && event.data.type) {
+      switch (event.data.type) {
+        case 'CRONOMETRO_UPDATE':
+          tiempoMs = event.data.tiempoMs;
+          actualizarDisplay();
+          break;
+
+        case 'CRONOMETRO_STOPPED_FROM_NOTIFICATION':
+          // El cronómetro fue detenido desde la notificación
+          detener();
+          alert('⏱️ Cronómetro detenido desde la notificación');
+          break;
+      }
     }
   });
 }
