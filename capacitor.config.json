@@ -1,8 +1,12 @@
 {
   "appId": "com.cronometro.contador",
-  "appName": "Cronómetro Contador",
-  "webDir": ".",
+  "appName": "Cronometro Contador",
+  "webDir": "dist",
   "bundledWebRuntime": false,
+  "server": {
+    "url": "https://fdva92.github.io/cronometro-contador/",
+    "cleartext": true
+  },
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 3000,
@@ -10,11 +14,6 @@
       "backgroundColor": "#667eea",
       "androidSplashResourceName": "splash",
       "androidScaleType": "CENTER_CROP"
-    }
-  },
-  "android": {
-    "buildOptions": {
-      "releaseType": "APK"
     }
   }
 }
