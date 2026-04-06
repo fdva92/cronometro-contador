@@ -148,11 +148,6 @@ function registrarVuelta() {
   contador++;
   actualizarContadorDisplay();
 
-  const lista = document.getElementById("lista");
-  const item = document.createElement("li");
-  item.textContent = `${contador}`;
-  lista.appendChild(item);
-
   let nuevoColor;
   do {
     nuevoColor = colores[Math.floor(Math.random() * colores.length)];
@@ -161,6 +156,21 @@ function registrarVuelta() {
   colores.forEach(color => document.body.classList.remove(color));
   document.body.classList.add(nuevoColor);
   colorActual = nuevoColor;
+
+  // Paso 1: Limpiar intervalo viejo
+  if (intervalo) {
+    clearInterval(intervalo);
+    intervalo = null;
+  }
+
+  // Paso 2: Resetear valores sin interferencia del intervalo
+  ultimoInicio = Date.now();
+  acumuladoMs = 0;
+  tiempoMs = 0;
+  actualizarDisplay();
+
+  // Paso 3: Reiniciar intervalo con valores limpios
+  iniciarIntervalo();
 
   guardarEstado();
 
@@ -187,7 +197,6 @@ function detener() {
   colorActual = 'color-1';
   actualizarDisplay();
   actualizarContadorDisplay();
-  document.getElementById("lista").innerHTML = "";
 
   colores.forEach(color => document.body.classList.remove(color));
 
