@@ -40,6 +40,7 @@ function cargarEstado() {
     }
 
     actualizarDisplay();
+    actualizarContadorDisplay();
     aplicarColor();
   }
 }
@@ -98,14 +99,21 @@ function formatTime(ms) { // Función para convertir milisegundos a formato mm:s
 }
 
 function actualizarDisplay() { // Función para actualizar el display con el tiempo formateado
-  const { mm, ss, cs, texto } = formatTime(tiempoMs);// Obtenemos el tiempo formateado
+  const { mm, ss, cs, texto } = formatTime(tiempoMs); // Obtenemos el tiempo formateado
   document.getElementById("tiempo").textContent = texto; // Actualizamos el display principal con el tiempo formateado
-  const minEl = document.getElementById("minutos"); 
+  const minEl = document.getElementById("minutos");
   const segEl = document.getElementById("segundos");
   const csEl = document.getElementById("centesimas");
   if (minEl) minEl.textContent = mm;
   if (segEl) segEl.textContent = ss;
   if (csEl) csEl.textContent = cs;
+}
+
+function actualizarContadorDisplay() {
+  const contadorEl = document.getElementById("contador-display");
+  if (contadorEl) {
+    contadorEl.textContent = contador;
+  }
 }
 
 function iniciar() {
@@ -138,15 +146,11 @@ function registrarVuelta() {
   if (!cronometroActivo) return;
 
   contador++;
+  actualizarContadorDisplay();
 
-  const ahora = Date.now();
-  tiempoMs = acumuladoMs + (ahora - ultimoInicio);
-
-  let lista = document.getElementById("lista");
-  let item = document.createElement("li");
-
-  const info = formatTime(tiempoMs);
-  item.textContent = `Vuelta ${contador}: ${info.texto}`;
+  const lista = document.getElementById("lista");
+  const item = document.createElement("li");
+  item.textContent = `${contador}`;
   lista.appendChild(item);
 
   let nuevoColor;
@@ -158,10 +162,6 @@ function registrarVuelta() {
   document.body.classList.add(nuevoColor);
   colorActual = nuevoColor;
 
-  acumuladoMs = 0;
-  ultimoInicio = Date.now();
-  tiempoMs = 0;
-  actualizarDisplay();
   guardarEstado();
 
   if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
@@ -186,6 +186,7 @@ function detener() {
   contador = 0;
   colorActual = 'color-1';
   actualizarDisplay();
+  actualizarContadorDisplay();
   document.getElementById("lista").innerHTML = "";
 
   colores.forEach(color => document.body.classList.remove(color));
