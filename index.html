@@ -210,15 +210,24 @@
       }
     }
 
-
-      }
-    }
-
     .content {
       position: relative;
       z-index: 5;
       padding-top: 20px;
       padding-bottom: 20px;
+    }
+
+    .buttons-container,
+    .counter-display {
+      position: relative;
+      z-index: 10;
+    }
+
+    .counter-display {
+      font-size: 1.2rem;
+      color: #333;
+      margin-bottom: 20px;
+      font-weight: 700;
     }
 
     h1 {
@@ -423,9 +432,6 @@
       </div>
 
       <div class="counter-display">Contador: <span id="contador-display">0</span></div>
-
-      <h2>Vueltas:</h2>
-      <ul id="lista"></ul>
     </div>
 
     <!-- Fondo del océano con olas -->
